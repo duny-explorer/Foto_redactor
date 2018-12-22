@@ -7,27 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>1517</width>
-    <height>887</height>
+    <height>885</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(62, 62, 62);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="foto">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>16</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QTabWidget" name="tabWidget">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -36,21 +29,31 @@
       <height>151</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(35, 35, 35);
+selection-background-color: rgb(170, 0, 0);</string>
+    </property>
     <property name="currentIndex">
      <number>1</number>
     </property>
     <widget class="QWidget" name="function">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <attribute name="title">
       <string>Доп. функции</string>
      </attribute>
      <widget class="Line" name="line">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>170</x>
         <y>0</y>
-        <width>21</width>
+        <width>2</width>
         <height>121</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -350,13 +353,20 @@
     </widget>
    </widget>
    <widget class="QScrollArea" name="scrollArea_2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1210</x>
       <y>200</y>
       <width>281</width>
       <height>581</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(35, 35, 35);
+</string>
     </property>
     <property name="widgetResizable">
      <bool>false</bool>
@@ -365,7 +375,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>-690</y>
+       <y>0</y>
        <width>249</width>
        <height>1269</height>
       </rect>
@@ -380,6 +390,9 @@
        </rect>
       </property>
       <layout class="QVBoxLayout" name="parameters">
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QLabel" name="label">
          <property name="font">
@@ -389,6 +402,9 @@
            <bold>false</bold>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
          <property name="text">
           <string>Яркость</string>
          </property>
@@ -396,6 +412,100 @@
        </item>
        <item>
         <widget class="QSlider" name="brightness">
+         <property name="palette">
+          <palette>
+           <active>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="Button">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Base">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+            <colorrole role="Window">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>35</red>
+               <green>35</green>
+               <blue>35</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
+          </palette>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="minimum">
           <number>-100</number>
          </property>
@@ -408,11 +518,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_2">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_2">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Прозрачность</string>
@@ -427,11 +550,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_3">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_3">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Контрастность</string>
@@ -452,11 +588,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_4">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_4">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Насыщенность</string>
@@ -477,11 +626,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_5">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_5">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Резкость</string>
@@ -502,11 +664,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_6">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_6">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Выгорание</string>
@@ -526,11 +701,24 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_7">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_7">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>Тепло</string>
@@ -545,11 +733,25 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_8">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(170, 0, 0);</string>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_19">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(85, 85, 85);</string>
          </property>
          <property name="text">
           <string>Результат</string>
@@ -560,7 +762,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QScrollArea" name="scrollArea">
+   <widget class="QScrollArea" name="foto_place">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -581,6 +783,19 @@
        <height>649</height>
       </rect>
      </property>
+     <widget class="QLabel" name="foto">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>1081</width>
+        <height>641</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -592,6 +807,11 @@
      <width>1517</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(172, 0, 0);
+selection-background-color: rgb(109, 0, 0);
+color: rgb(255, 255, 255);</string>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
