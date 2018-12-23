@@ -3,13 +3,14 @@
 
 by duny-explorer
 """
+import random
 import sys
 from PyQt5 import uic
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageEnhance
 import numpy as np
 from PyQt5.QtCore import Qt
 from PIL.ImageQt import ImageQt
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QInputDialog, QColorDialog, QWidget
 
 
@@ -48,6 +49,7 @@ class Fotopocalipsis(QMainWindow):
         self.foto_place.setWidget(self.foto)
 
         self.setWindowTitle("Фотопокалипсис")
+        self.setWindowIcon(QIcon('images\\icon.png'))
 
         """
         Верстаем минюшку для открытия, сохранения файла и других tools
@@ -80,7 +82,11 @@ class Fotopocalipsis(QMainWindow):
         self.origin.clicked.connect(self.start_foto)
         self.stereopara.clicked.connect(self.stereopara_filter)
         self.white_black.clicked.connect(self.white_black_filter)
+
         self.btn_back.clicked.connect(self.back)
+        self.result.clicked.connect(self.change_parameters)
+        self.resize_btn.clicked.connect(self.resize_foto)
+        self.plus_foto.clicked.connect(self.add_foto)
 
         """
         Сделаем всплывающие подсказки для фильтров. Всё для удобства пользователей.
@@ -94,6 +100,7 @@ class Fotopocalipsis(QMainWindow):
         self.color.setToolTip("В оттеках одного \nцвета")
         self.color_glass.setToolTip("Прозрачная цветовая \nплёнка")
         self.stereopara.setToolTip("Стереопара")
+        self.white_black.setToolTip("Чёрно-белое")
 
         """
         Так как клавиатурное решение немного заедает, решила на всякий пожарный добавить кнопки.
@@ -110,11 +117,10 @@ class Fotopocalipsis(QMainWindow):
         """
 
         self.brightness.valueChanged.connect(self.change_value)
-        self.transparency.valueChanged.connect(self.change_value)
         self.contrast.valueChanged.connect(self.change_value)
         self.saturation.valueChanged.connect(self.change_value)
         self.sharpness.valueChanged.connect(self.change_value)
-        self.burnout.valueChanged.connect(self.change_value)
+        self.noise.valueChanged.connect(self.change_value)
         self.degradation.valueChanged.connect(self.change_value)
 
     def keyPressEvent(self, event):
@@ -124,7 +130,7 @@ class Fotopocalipsis(QMainWindow):
 
         клавиша А - влево на 90 градусов, D - вправо на 90 градусов
         """
-        print(1)
+
         try:
             if event.key() == Qt.Key_A:
                 print(2)
@@ -137,6 +143,8 @@ class Fotopocalipsis(QMainWindow):
                 self.start_pixels = self.pixels.copy()
                 self.img = Image.fromarray(np.uint8(self.pixels))
                 self.foto_viz()
+            elif event.key() == Qt.Key_Backspace:
+                self.back()
         except Exception as e:
             print(e)  # Кнопки не всегда работают
 
@@ -271,10 +279,51 @@ class Fotopocalipsis(QMainWindow):
         self.pixels = np.asarray(self.img)
         self.foto_viz()
 
-    def degradation_parametr(self):
-        self.img = self.img.filter(ImageFilter.GaussianBlur(100))
+    def degradation_parameter(self):
+        p = self.degradation.value()
+        self.img = self.img.filter(ImageFilter.GaussianBlur(p))
         self.pixels = np.asarray(self.img)
-        self.foto_viz()
+
+    def contrast_parameter(self):
+        level = self.contrast.value()
+        self.img = ImageEnhance.Contrast(self.img).enhance(level)
+        self.pixels = np.asarray(self.img)
+
+    def brightness_parameter(self):
+        p = self.brightness.value() / 10
+
+        for x in range(self.img.size[0]):
+            for y in range(self.img.size[1]):
+                r, g, b = self.img.getpixel((x, y))
+
+                red = min(255, max(0, int(r * p)))
+                green = min(255, max(0, int(g * p)))
+                blue = min(255, max(0, int(b * p)))
+
+                self.img.putpixel((x, y), (red, green, blue))
+
+        self.pixels = np.asarray(self.img)
+
+    def noise_parameter(self):
+
+        for i in range(self.img.size[0]):
+            for j in range(self.img.size[1]):
+                rand = random.randint(-self.noise.value(), self.noise.value())
+                r, g, b = self.img.getpixel((i, j))
+                r = min(max(r + rand, 0), 255)
+                g = min(max(g + rand, 0), 255)
+                b = min(max(b + rand, 0), 255)
+                self.img.putpixel((i, j), (r, g, b))
+
+        self.pixels = np.asarray(self.img)
+
+    def saturation_parameter(self):
+        self.img = ImageEnhance.Color(self.img).enhance(self.saturation.value() / 10)
+        self.pixels = np.asarray(self.img)
+
+    def sharpness_parameter(self):
+        self.img = self.img.filter(ImageFilter.UnsharpMask(self.sharpness.value()))
+        self.pixels = np.asarray(self.img)
 
     def white_black_filter(self):
 
@@ -298,7 +347,6 @@ class Fotopocalipsis(QMainWindow):
         self.pixels = np.asarray(self.img)
         self.foto_viz()
 
-
     def start_foto(self):
         self.past_pixels = self.pixels.copy()
         self.pixels = self.start_pixels.copy()
@@ -317,10 +365,13 @@ class Fotopocalipsis(QMainWindow):
             file_name = QFileDialog.getOpenFileName(  # Открывает окно для выбора файла
                 self, "Открыть файл", "", "*.jpg *.jpeg *.bmp *.png"
             )
+
             self.img = Image.open(file_name[0])
             self.start_pixels = np.asarray(self.img)
             self.past_pixels = np.asarray(self.img)
             self.pixels = np.asarray(self.img)
+            self.width.setText(str(self.img.size[1]))
+            self.height.setText(str(self.img.size[0]))
             self.foto_viz()
         except Exception:
             pass
@@ -366,13 +417,42 @@ class Fotopocalipsis(QMainWindow):
             self.img = Image.fromarray(np.uint8(self.pixels))
             self.foto_viz()
 
+    def change_parameters(self):
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
+        if self.brightness.value() != 0:
+            self.brightness_parameter()
+
+        if self.sharpness.value() != 0:
+            self.sharpness_parameter()
+
+        if self.contrast.value() != 0:
+            self.contrast_parameter()
+
+        if self.degradation.value() != 0:
+            self.degradation_parameter()
+
+        if self.noise.value() != 0:
+            self.noise_parameter()
+
+        if self.saturation.value() != 0:
+            self.saturation_parameter()
+
+        self.foto_viz()
+
+        self.brightness.setValue(0)
+        self.contrast.setValue(0)
+        self.sharpness.setValue(0)
+        self.degradation.setValue(0)
+        self.noise.setValue(0)
+        self.saturation.setValue(0)
+
     def change_value(self):
         self.count_brightness.setText(str(self.brightness.value()))
-        self.count_transparency.setText(str(self.transparency.value()))
         self.count_contrast.setText(str(self.contrast.value()))
         self.count_saturation.setText(str(self.saturation.value()))
         self.count_sharpness.setText(str(self.sharpness.value()))
-        self.count_burnout.setText(str(self.burnout.value()))
+        self.count_noise.setText(str(self.noise.value()))
         self.count_degradation.setText(str(self.degradation.value()))
 
     def back(self):
@@ -390,6 +470,34 @@ class Fotopocalipsis(QMainWindow):
         if not self.tools.isEnabled():
             self.tools.setEnabled(True)
             self.result.setEnabled(True)
+
+    def add_foto(self):
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
+        try:
+            file_name = QFileDialog.getOpenFileName(  # Открывает окно для выбора файла
+                self, "Открыть файл", "", "*.jpg *.jpeg *.bmp *.png"
+            )
+
+            second_image = Image.open(file_name[0]).resize(self.img.size)
+            k = int(self.glass.text()) / 100
+
+            self.img = Image.blend(self.img, second_image, k)
+            self.pixels = np.asarray(self.img)
+            self.foto_viz()
+        except Exception:
+            pass
+
+    def resize_foto(self):
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
+        try:
+            self.img = self.img.resize((int(self.width.text()), int(self.height.text())))
+            self.pixels = np.asarray(self.img)
+            self.foto_viz()
+        except Exception:
+            self.width.setText(str(self.img.size[1]))
+            self.height.setText(str(self.img.size[0]))
 
 
 if __name__ == '__main__':
