@@ -5,7 +5,7 @@ by duny-explorer
 """
 import sys
 from PyQt5 import uic
-from PIL import Image
+from PIL import Image, ImageFilter
 import numpy as np
 from PyQt5.QtCore import Qt
 from PIL.ImageQt import ImageQt
@@ -20,8 +20,8 @@ class AboutMyProgram(QWidget):
 
     def initUI(self):
         self.label = QLabel(self)
-        self.label.setText("DEAD")
-        self.setGeometry(400, 400, 300, 300)
+        self.label.setText(open("about.txt").read())
+        self.setGeometry(400, 400, 600, 400)
         self.setWindowTitle('О программе')
 
 
@@ -57,30 +57,57 @@ class Fotopocalipsis(QMainWindow):
 
         menubar = self.menuBar()
         menu = menubar.addMenu('Меню')
-        open_activity = menu.addAction("Открыть")
-        save_activity = menu.addAction("Сохранить")
-        info_activity = menu.addAction("Справка")
-        about_activity = menu.addAction("О программе")
-        open_activity.triggered.connect(self.open_file)
-        save_activity.triggered.connect(self.save_file)
-        info_activity.triggered.connect(self.info_program)
-        about_activity.triggered.connect(self.about_program)
+        self.open_activity = menu.addAction("Открыть")
+        self.save_activity = menu.addAction("Сохранить")
+        self.save_activity.setEnabled(False)
+        self.info_activity = menu.addAction("Справка")
+        self.about_activity = menu.addAction("О программе")
+        self.open_activity.triggered.connect(self.open_file)
+        self.save_activity.triggered.connect(self.save_file)
+        self.info_activity.triggered.connect(self.info_program)
+        self.about_activity.triggered.connect(self.about_program)
 
         """
         Подключаем фильтры
         """
 
         self.negative.clicked.connect(self.negative_filter)
-        self.white_black.clicked.connect(self.white_black_filter)
+        self.grey.clicked.connect(self.grey_filter)
         self.sepia.clicked.connect(self.sepia_filter)
         self.pixel.clicked.connect(self.pixel_filter)
+        self.color_glass.clicked.connect(self.color_filter_glass)
         self.color.clicked.connect(self.color_filter)
         self.origin.clicked.connect(self.start_foto)
         self.stereopara.clicked.connect(self.stereopara_filter)
+        self.white_black.clicked.connect(self.white_black_filter)
         self.btn_back.clicked.connect(self.back)
+
+        """
+        Сделаем всплывающие подсказки для фильтров. Всё для удобства пользователей.
+        """
+
+        self.origin.setToolTip("Без фильтров")
+        self.negative.setToolTip("Негатив")
+        self.grey.setToolTip("В оттенках одного цвета")
+        self.sepia.setToolTip("Сепия")
+        self.pixel.setToolTip("Пикселизация")
+        self.color.setToolTip("В оттеках одного \nцвета")
+        self.color_glass.setToolTip("Прозрачная цветовая \nплёнка")
+        self.stereopara.setToolTip("Стереопара")
+
+        """
+        Так как клавиатурное решение немного заедает, решила на всякий пожарный добавить кнопки.
+        """
+
+        self.right.clicked.connect(self.rot_90)
+        self.left.clicked.connect(self.rot_90)
 
         self.first_page.clicked.connect(self.change_page)  # Смена страниц фильтров
         self.second_page.clicked.connect(self.change_page)
+
+        """
+        Меняем текст на Labels, чтобы пользователь видел значения, которые выбирает ползунком.
+        """
 
         self.brightness.valueChanged.connect(self.change_value)
         self.transparency.valueChanged.connect(self.change_value)
@@ -88,7 +115,7 @@ class Fotopocalipsis(QMainWindow):
         self.saturation.valueChanged.connect(self.change_value)
         self.sharpness.valueChanged.connect(self.change_value)
         self.burnout.valueChanged.connect(self.change_value)
-        self.hot.valueChanged.connect(self.change_value)
+        self.degradation.valueChanged.connect(self.change_value)
 
     def keyPressEvent(self, event):
 
@@ -97,9 +124,10 @@ class Fotopocalipsis(QMainWindow):
 
         клавиша А - влево на 90 градусов, D - вправо на 90 градусов
         """
-
+        print(1)
         try:
             if event.key() == Qt.Key_A:
+                print(2)
                 self.pixels = np.rot90(self.pixels)
                 self.start_pixels = self.pixels.copy()  # Предосторожность, чтобы до открытия фото всё не вылетело
                 self.img = Image.fromarray(np.uint8(self.pixels))
@@ -112,17 +140,16 @@ class Fotopocalipsis(QMainWindow):
         except Exception as e:
             print(e)  # Кнопки не всегда работают
 
-    def white_black_filter(self):
+    def grey_filter(self):
 
         """
-        Конвентируем в чёрно-белое (на чистоту в оттеках серого) изображение
+        Конвентируем в оттеках серого изображение
         """
 
-        self.past_pixels = self.pixels.copy()
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
         size = self.pixels.shape
         k = np.array([[[0.2989, 0.587, 0.114]]])
         self.pixels = np.repeat(np.round(np.sum(self.pixels * k, axis=2)), 3).astype(np.uint8).reshape(*size)
-
         self.img = Image.fromarray(np.uint8(self.pixels))
         self.foto_viz()
 
@@ -132,7 +159,7 @@ class Fotopocalipsis(QMainWindow):
         Негатив, почувствуй себя рентгенологом
         """
 
-        self.past_pixels = self.pixels.copy()
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
         self.pixels = np.array([255, 255, 255]) - self.pixels  # NumPy наше всё
         self.img = Image.fromarray(np.uint8(self.pixels))
         self.foto_viz()
@@ -145,7 +172,8 @@ class Fotopocalipsis(QMainWindow):
         P.S зараза долгий, до алтернативы на NumPy не додумала
         """
 
-        self.past_pixels = self.pixels.copy()
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
         for x in range(self.img.size[0]):
             for y in range(self.img.size[1]):
                 r, g, b = self.img.getpixel((x, y))
@@ -163,7 +191,8 @@ class Fotopocalipsis(QMainWindow):
         Пикселизация. 8-bit рулят миром.
         """
 
-        self.past_pixels = self.pixels.copy()
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
         i, okBtnPressed = QInputDialog.getInt(
             self, "Размер пикселей", "Размер", 13, 5, 50
         )
@@ -173,15 +202,52 @@ class Fotopocalipsis(QMainWindow):
             self.pixels = np.asarray(self.img)
             self.foto_viz()
 
-    def color_filter(self):
+    def color_filter_glass(self):
 
-        self.past_pixels = self.pixels.copy()
+        """
+        Ажурная прозрачная цветовая маска на изображение.
+        """
+
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
         color = QColorDialog.getColor()
         if color.isValid():
-            print(color.name())
+            color = color.name()
+            layer = Image.new("RGB", self.img.size, color)
+            self.img = Image.blend(self.img, layer, 0.5)
+
+            self.pixels = np.asarray(self.img)
+            self.foto_viz()
+
+    def color_filter(self):
+
+        """
+        Специально для любителей одного цвета.
+        """
+
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
+        color = QColorDialog.getColor()
+        if color.isValid():
+            color = color.name()
+
+            size = self.pixels.shape
+            k = np.array([[[0.2989, 0.587, 0.114]]])  # Нужно сделать изображение серым, чтобы было все в одно тоне
+            self.pixels = np.repeat(np.round(np.sum(self.pixels * k, axis=2)), 3).astype(np.uint8).reshape(*size)
+
+            layer = Image.new("RGB", self.img.size, color)  # Создаем слой нужного нам цвета
+            self.img = Image.blend(Image.fromarray(np.uint8(self.pixels)), layer, 0.5)
+
+            self.pixels = np.asarray(self.img)
+            self.foto_viz()
 
     def stereopara_filter(self):
-        self.past_pixels = self.pixels.copy()
+
+        """
+        Пытаемся создать эффект 3D изображения
+        """
+
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
         delta, okBtnPressed = QInputDialog.getInt(
             self, "Размер сдвига", "Размер", 13, 5, 50
         )
@@ -205,6 +271,34 @@ class Fotopocalipsis(QMainWindow):
         self.pixels = np.asarray(self.img)
         self.foto_viz()
 
+    def degradation_parametr(self):
+        self.img = self.img.filter(ImageFilter.GaussianBlur(100))
+        self.pixels = np.asarray(self.img)
+        self.foto_viz()
+
+    def white_black_filter(self):
+
+        """
+        Только чёрный и белый. Только ХАРДКОР. Тоже медленная.
+        Просто уже лень было придумавать способ с помощью маски и NumPy.
+        """
+
+        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+
+        p = 255 / 1 / 2 * 3
+        for x in range(self.img.size[0]):
+            for y in range(self.img.size[1]):
+                r, g, b = self.img.getpixel((x, y))
+                total = r + g + b
+                if total > p:
+                    self.img.putpixel((x, y), (255, 255, 255))
+                else:
+                    self.img.putpixel((x, y), (0, 0, 0))
+
+        self.pixels = np.asarray(self.img)
+        self.foto_viz()
+
+
     def start_foto(self):
         self.past_pixels = self.pixels.copy()
         self.pixels = self.start_pixels.copy()
@@ -216,6 +310,8 @@ class Fotopocalipsis(QMainWindow):
         """
         Открытие файла. Обернула в исключение, а то вылетает, если передумаешь открывать файл (Лень if писать)
         """
+
+        self.save_activity.setEnabled(True)
 
         try:
             file_name = QFileDialog.getOpenFileName(  # Открывает окно для выбора файла
@@ -257,6 +353,19 @@ class Fotopocalipsis(QMainWindow):
         else:
             self.stack.setCurrentIndex(0)
 
+    def rot_90(self):
+        if self.sender().text() == "<--":
+            print(2)
+            self.pixels = np.rot90(self.pixels)
+            self.start_pixels = self.pixels.copy()  # Предосторожность, чтобы до открытия фото всё не вылетело
+            self.img = Image.fromarray(np.uint8(self.pixels))
+            self.foto_viz()
+        else:
+            self.pixels = np.rot90(self.pixels, 3)
+            self.start_pixels = self.pixels.copy()
+            self.img = Image.fromarray(np.uint8(self.pixels))
+            self.foto_viz()
+
     def change_value(self):
         self.count_brightness.setText(str(self.brightness.value()))
         self.count_transparency.setText(str(self.transparency.value()))
@@ -264,7 +373,7 @@ class Fotopocalipsis(QMainWindow):
         self.count_saturation.setText(str(self.saturation.value()))
         self.count_sharpness.setText(str(self.sharpness.value()))
         self.count_burnout.setText(str(self.burnout.value()))
-        self.count_hot.setText(str(self.hot.value()))
+        self.count_degradation.setText(str(self.degradation.value()))
 
     def back(self):
         self.pixels = self.past_pixels.copy()

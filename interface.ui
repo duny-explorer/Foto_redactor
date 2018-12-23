@@ -80,6 +80,74 @@ selection-background-color: rgb(170, 0, 0);</string>
        <string>Назад</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="left">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>60</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;--</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="right">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>60</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>--&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>10</y>
+        <width>151</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Поворот на 90 градусов</string>
+      </property>
+     </widget>
+     <widget class="Line" name="line_9">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>0</y>
+        <width>2</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="filthers">
      <attribute name="title">
@@ -115,7 +183,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>1.jpg</normaloff>1.jpg</iconset>
+          <normaloff>images/1.jpg</normaloff>images/1.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -127,7 +195,7 @@ selection-background-color: rgb(170, 0, 0);</string>
          <string/>
         </property>
        </widget>
-       <widget class="QPushButton" name="white_black">
+       <widget class="QPushButton" name="grey">
         <property name="geometry">
          <rect>
           <x>150</x>
@@ -141,7 +209,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/2.jpg</normaloff>C:/Users/daria/Desktop/2.jpg</iconset>
+          <normaloff>images/2.jpg</normaloff>images/2.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -167,7 +235,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/3.jpg</normaloff>C:/Users/daria/Desktop/3.jpg</iconset>
+          <normaloff>images/3.jpg</normaloff>images/3.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -193,7 +261,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/4.jpg</normaloff>C:/Users/daria/Desktop/4.jpg</iconset>
+          <normaloff>images/4.jpg</normaloff>images/4.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -219,7 +287,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/5.jpg</normaloff>C:/Users/daria/Desktop/5.jpg</iconset>
+          <normaloff>images/5.jpg</normaloff>images/5.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -245,7 +313,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/6.jpg</normaloff>C:/Users/daria/Desktop/6.jpg</iconset>
+          <normaloff>images/6.jpg</normaloff>images/6.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -271,7 +339,7 @@ selection-background-color: rgb(170, 0, 0);</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>C:/Users/daria/Desktop/7.jpg</normaloff>C:/Users/daria/Desktop/7.jpg</iconset>
+          <normaloff>images/7.jpg</normaloff>images/7.jpg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -280,7 +348,7 @@ selection-background-color: rgb(170, 0, 0);</string>
          </size>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_14">
+       <widget class="QPushButton" name="color_glass">
         <property name="geometry">
          <rect>
           <x>990</x>
@@ -290,10 +358,20 @@ selection-background-color: rgb(170, 0, 0);</string>
          </rect>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>images/8.jpg</normaloff>images/8.jpg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>121</width>
+          <height>91</height>
+         </size>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_15">
+       <widget class="QPushButton" name="white_black">
         <property name="geometry">
          <rect>
           <x>1130</x>
@@ -303,7 +381,7 @@ selection-background-color: rgb(170, 0, 0);</string>
          </rect>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string/>
         </property>
        </widget>
       </widget>
@@ -929,19 +1007,19 @@ selection-background-color: rgb(170, 0, 0);</string>
           <string notr="true">color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
-          <string>Тепло</string>
+          <string>Размытие</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="hot">
+        <widget class="QSlider" name="degradation">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="count_hot">
+        <widget class="QLabel" name="count_degradation">
          <property name="font">
           <font>
            <pointsize>15</pointsize>
