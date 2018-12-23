@@ -49,7 +49,7 @@ class Fotopocalipsis(QMainWindow):
         self.foto_place.setWidget(self.foto)
 
         self.setWindowTitle("Фотопокалипсис")
-        self.setWindowIcon(QIcon('images\\icon.png'))
+        self.setWindowIcon(QIcon('images\\icon.jpg'))
 
         """
         Верстаем минюшку для открытия, сохранения файла и других tools
