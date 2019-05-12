@@ -3,6 +3,7 @@
 
 by duny-explorer
 """
+
 import random
 import sys
 from PyQt5 import uic
@@ -11,7 +12,8 @@ import numpy as np
 from PyQt5.QtCore import Qt
 from PIL.ImageQt import ImageQt
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QInputDialog, QColorDialog, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QInputDialog, QColorDialog, QWidget, \
+    QGridLayout
 
 
 class AboutMyProgram(QWidget):
@@ -50,6 +52,7 @@ class Fotopocalipsis(QMainWindow):
 
         self.setWindowTitle("Фотопокалипсис")
         self.setWindowIcon(QIcon('images\\icon.jpg'))
+
 
         """
         Верстаем минюшку для открытия, сохранения файла и других tools
@@ -153,8 +156,10 @@ class Fotopocalipsis(QMainWindow):
         """
         Конвентируем в оттеках серого изображение
         """
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
         size = self.pixels.shape
         k = np.array([[[0.2989, 0.587, 0.114]]])
         self.pixels = np.repeat(np.round(np.sum(self.pixels * k, axis=2)), 3).astype(np.uint8).reshape(*size)
@@ -167,7 +172,10 @@ class Fotopocalipsis(QMainWindow):
         Негатив, почувствуй себя рентгенологом
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
+
         self.pixels = np.array([255, 255, 255]) - self.pixels  # NumPy наше всё
         self.img = Image.fromarray(np.uint8(self.pixels))
         self.foto_viz()
@@ -180,7 +188,9 @@ class Fotopocalipsis(QMainWindow):
         P.S зараза долгий, до алтернативы на NumPy не додумала
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         for x in range(self.img.size[0]):
             for y in range(self.img.size[1]):
@@ -199,14 +209,18 @@ class Fotopocalipsis(QMainWindow):
         Пикселизация. 8-bit рулят миром.
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         i, okBtnPressed = QInputDialog.getInt(
             self, "Размер пикселей", "Размер", 13, 5, 50
         )
         if okBtnPressed:
+            size = self.img.size
             self.img = self.img.resize((self.img.size[0] // i, self.img.size[1] // i), Image.NEAREST)
             self.img = self.img.resize((self.img.size[0] * i, self.img.size[1] * i), Image.NEAREST)
+            self.img = self.img.resize(size)
             self.pixels = np.asarray(self.img)
             self.foto_viz()
 
@@ -216,7 +230,10 @@ class Fotopocalipsis(QMainWindow):
         Ажурная прозрачная цветовая маска на изображение.
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
+
         color = QColorDialog.getColor()
         if color.isValid():
             color = color.name()
@@ -232,7 +249,9 @@ class Fotopocalipsis(QMainWindow):
         Специально для любителей одного цвета.
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         color = QColorDialog.getColor()
         if color.isValid():
@@ -254,7 +273,9 @@ class Fotopocalipsis(QMainWindow):
         Пытаемся создать эффект 3D изображения
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         delta, okBtnPressed = QInputDialog.getInt(
             self, "Размер сдвига", "Размер", 13, 5, 50
@@ -332,7 +353,9 @@ class Fotopocalipsis(QMainWindow):
         Просто уже лень было придумавать способ с помощью маски и NumPy.
         """
 
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         p = 255 / 1 / 2 * 3
         for x in range(self.img.size[0]):
@@ -405,8 +428,11 @@ class Fotopocalipsis(QMainWindow):
             self.stack.setCurrentIndex(0)
 
     def rot_90(self):
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
+
         if self.sender().text() == "<--":
-            print(2)
             self.pixels = np.rot90(self.pixels)
             self.start_pixels = self.pixels.copy()  # Предосторожность, чтобы до открытия фото всё не вылетело
             self.img = Image.fromarray(np.uint8(self.pixels))
@@ -418,7 +444,9 @@ class Fotopocalipsis(QMainWindow):
             self.foto_viz()
 
     def change_parameters(self):
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         if self.brightness.value() != 0:
             self.brightness_parameter()
@@ -472,7 +500,9 @@ class Fotopocalipsis(QMainWindow):
             self.result.setEnabled(True)
 
     def add_foto(self):
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         try:
             file_name = QFileDialog.getOpenFileName(  # Открывает окно для выбора файла
@@ -489,7 +519,9 @@ class Fotopocalipsis(QMainWindow):
             pass
 
     def resize_foto(self):
-        self.past_pixels = self.pixels.copy() if (self.past_pixels != self.pixels).all() else self.past_pixels
+        if self.past_pixels.shape != self.pixels.shape or \
+                (self.past_pixels.shape == self.pixels.shape and (self.past_pixels != self.pixels).all()):
+            self.past_pixels = self.pixels.copy()
 
         try:
             self.img = self.img.resize((int(self.width.text()), int(self.height.text())))
